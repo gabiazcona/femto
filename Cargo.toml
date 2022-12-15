@@ -7,5 +7,6 @@ edition = "2021"
 
 [dependencies]
 termion = "*"
+crossterm = "0.25.0"
 log = "0.4"
 simplelog = "0.12.0"
