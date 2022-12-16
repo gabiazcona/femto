@@ -7,19 +7,14 @@ pub struct Editor {
 }
 
 impl Editor {
-    pub fn init(filename: &str) -> Result<Self, std::io::Error> {
+    pub fn init(filename: Option<&String>) -> Result<Self, std::io::Error> {
+        
         Ok(Editor {
             document: Document::open(filename)?,
             mode: Mode::Control,
         })
     }
 
-    pub fn start(&mut self) {
-        println!("FEMTO\n\n");
-        loop {
-            self.render_document();
-        }
-    }
 
     pub fn process_key(&mut self, key: &Key) -> Status {
         match self.mode {
@@ -56,10 +51,29 @@ impl Editor {
         }
     }
 
-    fn render_document(&mut self) {
-        println!("{}", self.document.filename);
+    // fn refresh_screen(&self) -> Result<(), std::io::Error> {
+    //     TerminalController::hide_cursor();
+    //     TerminalController::cursor_position(&Position::default());
+    //     if self.should_quit {
+    //         TerminalController::clear_screen();
+    //         println!("Bye!\r");
+    //     } else {
+    //         self.draw_rows();
+    //         TerminalController::cursor_position(&Position {
+    //             x: self.cursor_position.x.saturating_sub(self.offset.x),
+    //             y: self.cursor_position.y.saturating_sub(self.offset.y),
+    //         });
+    //     }
+    //     Terminal::cursor_show();
+    //     Terminal::flush()
+    // }
+
+    pub fn render_document(&mut self, terminal: &mut TerminalController) {
+        terminal.hide_cursor();
+
         println!("{}", self.document.contents);
-        TerminalController::show_cursor();
+        terminal.show_cursor();
+        terminal.flush();
     }
 }
 

@@ -1,4 +1,6 @@
-use crossterm::{terminal, event::{Event, self}, ExecutableCommand};
+use std::io::Write;
+
+use crossterm::{terminal, event::{Event, self}, ExecutableCommand, cursor};
 
 pub struct TerminalController {
     stdout: std::io::Stdout,
@@ -7,22 +9,30 @@ pub struct TerminalController {
 impl TerminalController {
     pub fn init() -> Result<Self, std::io::Error> {
         // put terminal in raw mode 
-        crossterm::terminal::enable_raw_mode()?;
+        let mut stdout = std::io::stdout();
+        stdout.execute(terminal::EnterAlternateScreen)?;
+        terminal::enable_raw_mode()?;
         Ok(TerminalController { stdout: std::io::stdout() })
     }
 
-    pub fn clear(&mut self) {
-        self.stdout.execute(terminal::Clear(terminal::ClearType::All));
+    pub fn clear(&mut self) -> Result<(), std::io::Error> {
+        self.stdout.execute(terminal::Clear(terminal::ClearType::All)).map(|_| ())
     }
 
-    pub fn show_cursor() {
-        todo!()
+    pub fn show_cursor(&mut self) -> Result<(), std::io::Error> {
+        self.stdout.execute(cursor::Show).map(|_| ())
     }
-    pub fn hide_cursor() {
-        todo!()
+
+    pub fn hide_cursor(&mut self) -> Result<(), std::io::Error> {
+        self.stdout.execute(cursor::Hide).map(|_| ())
+    }
+
+    pub fn flush(&mut self) -> Result<(), std::io::Error> {
+        self.stdout.flush()
     }
 
     pub fn handle_keypress(&self) -> Result<Key, std::io::Error> {
+        log::info!("handle keypress");
         let event = event::read()?;
         match event {
             Event::Key(key_event) => Ok(Key::map_code(key_event.code)),
@@ -31,7 +41,8 @@ impl TerminalController {
     }
 
     pub fn clean(&mut self) -> Result<(), std::io::Error> {
-        self.clear();
+        self.clear()?;
+        self.stdout.execute(terminal::LeaveAlternateScreen)?;
         crossterm::terminal::disable_raw_mode()?;
         log::info!("cleaning");
         Ok(())
