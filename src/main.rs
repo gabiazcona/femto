@@ -36,17 +36,23 @@ impl App {
         })
     }
     fn run(&mut self) {
+        if let Err(e) = self.terminal.position_cursor(0, 0) {
+            log::error!("Error: {:?}\r", e);
+        };
         loop {
-            self.editor.render_document(&mut self.terminal);
+            if let Err(e) = self.editor.render_document(&mut self.terminal) {
+                log::error!("Error: {:?}\r", e);
+                break;
+            };
             if let Ok(key) = self.terminal.handle_keypress() {
-                match self.editor.process_key(&key) {
+                match self.editor.process_key(&key, &mut self.terminal) {
                     Status::Quit =>  break,
                     Status::Continue => {},
                 }
             }
         }
         if let Err(e) = self.terminal.clean() {
-            println!("Error: {:?}\r", e);
+            log::error!("Error: {:?}\r", e);
         };
     }
 }

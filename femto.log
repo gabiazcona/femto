@@ -1,18 +1,4 @@
-17:40:50 [INFO] Starting FEMTO
-17:40:50 [INFO] Opening and reading file: testfile
-
-17:40:50 [INFO] handle keypress
-17:40:53 [INFO] handle keypress
-17:40:53 [INFO] handle keypress
-17:40:53 [INFO] handle keypress
-17:40:54 [INFO] handle keypress
-17:40:54 [INFO] handle keypress
-17:40:55 [INFO] handle keypress
-17:40:55 [INFO] handle keypress
-17:40:56 [INFO] handle keypress
-17:40:56 [INFO] handle keypress
-17:40:56 [INFO] handle keypress
-17:40:56 [INFO] handle keypress
-17:40:58 [INFO] handle keypress
-17:40:59 [INFO] handle keypress
-17:41:00 [INFO] cleaning
+18:05:20 [INFO] Starting FEMTO
+18:05:20 [INFO] terminal size: cols 160, rows 10
+18:05:20 [INFO] Opening and reading file: testfile
+18:05:39 [INFO] clean terminal
